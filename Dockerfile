@@ -1,15 +1,17 @@
 # build front-end
 FROM node:lts-alpine AS frontend
 
+RUN npm install pnpm -g
+
 WORKDIR /app
 
 COPY ./package.json /app
 
-RUN npm install
+RUN pnpm install
 
 COPY . /app
 
-RUN npm run build
+RUN pnpm run build
 
 # service
 FROM node:lts-alpine
@@ -22,4 +24,4 @@ COPY --from=frontend /app/dist /app/public
 
 EXPOSE 7890
 
-CMD ["npm", "run", "node-serve-dev"]
+CMD ["pnpm", "run", "node-serve-dev"]
