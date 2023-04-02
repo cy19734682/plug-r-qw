@@ -1,17 +1,15 @@
 # build front-end
 FROM node:lts-alpine AS frontend
 
-RUN npm install pnpm -g
-
 WORKDIR /app
 
 COPY ./package.json /app
 
-RUN pnpm install
+RUN npm install --unsafe-perm=true --allow-root
 
 COPY . /app
 
-RUN pnpm run build
+RUN npm run build
 
 # service
 FROM node:lts-alpine
