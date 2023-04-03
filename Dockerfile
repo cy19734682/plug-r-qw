@@ -18,7 +18,7 @@ WORKDIR /app
 
 COPY /node-serve /app
 
-RUN npm install --unsafe-perm=true --allow-root
+RUN npm install
 
 COPY --from=frontend /app/dist /app/public
 
