@@ -5,6 +5,8 @@ WORKDIR /app
 
 COPY ./package.json /app
 
+COPY ./package-lock.json /app
+
 RUN npm install --unsafe-perm=true --allow-root
 
 COPY . /app
@@ -24,4 +26,4 @@ COPY --from=frontend /app/dist /app/public
 
 EXPOSE 7890
 
-CMD ["npm", "run", "serve-dev"]
+CMD ["npm", "run", "serve"]
