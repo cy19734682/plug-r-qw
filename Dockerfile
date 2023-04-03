@@ -18,8 +18,10 @@ WORKDIR /app
 
 COPY /node-serve /app
 
+RUN npm install --unsafe-perm=true --allow-root
+
 COPY --from=frontend /app/dist /app/public
 
 EXPOSE 7890
 
-CMD ["pnpm", "run", "node-serve-dev"]
+CMD ["npm", "run", "serve-dev"]
