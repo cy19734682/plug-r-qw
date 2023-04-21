@@ -14,7 +14,7 @@ module.exports = defineConfig({
     }
   },
   
-  publicPath: './',
+  publicPath: process.env.NODE_ENV === 'production'? '/plug-r-qw/': '/',
   
   pages: {
     index: {
