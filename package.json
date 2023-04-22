@@ -46,7 +46,7 @@
   "bugs": {
     "url": "https://github.com/RickyHeaven/plug-r-qw/issues"
   },
-  "homepage": "https://cy19734682.github.io/plug-r-qw",
+  "homepage": "https://cy19734682.github.io/plug-r-qw/",
   "devDependencies": {
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-router": "~5.0.0",
