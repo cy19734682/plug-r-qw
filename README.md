@@ -1,4 +1,5 @@
 # plug-r-qw
+iview组件库
 
 * A JS lib base on Vue and View-design, you can achieve some complex functions with simple code after install this lib.
 
