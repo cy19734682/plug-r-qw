@@ -1,0 +1,64 @@
+{
+  "message": "",
+  "data": [
+    {
+      "level": 1,
+      "children": [
+        {
+          "level": 2,
+          "children": [
+            {
+              "level": 3,
+              "children": [
+                {
+                  "level": 4,
+                  "name": "产品组",
+                  "id": 92
+                },
+                {
+                  "level": 4,
+                  "name": "软件开发组",
+                  "id": 93
+                },
+                {
+                  "level": 4,
+                  "name": "测试组",
+                  "id": 94
+                }
+              ],
+              "name": "IT开发部",
+              "id": 72
+            }
+          ],
+          "name": "知了公司",
+          "id": 15
+        },
+        {
+          "level": 2,
+          "name": "test1",
+          "id": 23
+        },
+        {
+          "id": 101,
+          "level": 3,
+          "name": "测试机构"
+        },
+        {
+          "children": [
+            {
+              "level": 3,
+              "name": "Testing",
+              "id": 120
+            }
+          ],
+          "id": 118,
+          "level": 2,
+          "name": "Enginner"
+        }
+      ],
+      "name": "知了知识库有限公司",
+      "id": 2
+    }
+  ],
+  "code": 0
+}
