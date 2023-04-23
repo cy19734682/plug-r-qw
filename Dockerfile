@@ -5,8 +5,6 @@ WORKDIR /app
 
 COPY ./package.json /app
 
-COPY ./package-lock.json /app
-
 RUN npm cache clear --force
 
 RUN npm install --force --unsafe-perm=true --allow-root
