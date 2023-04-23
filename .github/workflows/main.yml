@@ -62,3 +62,4 @@ jobs:
             cd /srv/plug-r-qw/node-serve
             npm install 
             pm2 start ./index.js --name='plug-r-qw'
+            
