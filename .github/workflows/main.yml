@@ -56,7 +56,7 @@ jobs:
             rm -rf *
           scp: | #将build生成的文件从GitHub服务器的相应目录，传到我服务器的相应目录
             ./dist => /srv/plug-r-qw
-            ./node-serve => /project/plug-r-qw
+            ./node-serve => /srv/plug-r-qw
           last_ssh: | #这部分是在服务器上，传输文件后执行的命令，新版本重新安装依赖并运行
             cd /srv/plug-r-qw/node-serve
             npm install 
