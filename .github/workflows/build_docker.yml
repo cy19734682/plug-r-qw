@@ -15,8 +15,8 @@ jobs:
         with:
           login-server: registry.cn-hangzhou.aliyuncs.com # 务必正确填写镜像容器服务的登录地址
           region-id: cn-hangzhou # 务必正确填写镜像容器服务的登录地址
-          username: "${{ secrets.DOCKERHUB_ALIYUN_USERNAME }}" # 引用GitHub repo设置的镜像容器服务用户名
-          password: "${{ secrets.DOCKERHUB_ALIYUN_PASSWORD }}" # 引用GitHub repo设置的镜像容器服务密码
+          username: ${{ secrets.DOCKERHUB_ALIYUN_USERNAME }} # 引用GitHub repo设置的镜像容器服务用户名
+          password: ${{ secrets.DOCKERHUB_ALIYUN_PASSWORD }} # 引用GitHub repo设置的镜像容器服务密码
       - name: Build and Push Docker Image
         env:
           IMAGE_TAG: ${{ github.sha }} # 用于标记容器版本号
