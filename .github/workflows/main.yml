@@ -33,4 +33,4 @@ jobs:
             cd /srv/plug-r-qw
             npm install
             echo "判断名为plug-r-qw的进程是否存在"
-            if [test -z $(pm2 pid plug-r-qw)];  then echo "不存在" && pm2 start ./index.js --name='plug-r-qw'; else echo "存在" &&  pm2 restart plug-r-qw;  fi
+            if [test -z $(pm2 pid plug-r-qw)];  then echo "不存在" ; pm2 start ./index.js --name='plug-r-qw'; else echo "存在" ;  pm2 restart plug-r-qw;  fi
