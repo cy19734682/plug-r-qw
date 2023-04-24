@@ -46,9 +46,10 @@ jobs:
             cd /srv/plug-r-qw
             npm install 
             if test -z $(pm2 pid plug-r-qw); # 判断名为plug-r-qw的进程是否存在
-              then
+            then
               pm2 start ./index.js --name='plug-r-qw' # 不存在时启动进程
             else
               pm2 restart plug-r-qw # 存在时重启该进程
             fi
+            
             
