@@ -45,5 +45,10 @@ jobs:
           last_ssh: | #这部分是在服务器上，传输文件后执行的命令，新版本重新安装依赖并运行
             cd /srv/plug-r-qw
             npm install 
-            pm2 reload ./index.js --name='plug-r-qw'
+            if test -z $(pm2 pid plug-r-qw); # 判断名为plug-r-qw的进程是否存在
+              then
+              pm2 start ./index.js --name='plug-r-qw' # 不存在时启动进程
+            else
+              pm2 restart plug-r-qw # 存在时重启该进程
+            fi
             
