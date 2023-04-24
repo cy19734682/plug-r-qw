@@ -12,22 +12,6 @@ on:
       - master
 
 jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout 🛎️
-        uses: actions/checkout@v2.3.1
-
-      - name: Install and Build 🔧 # This example project is built using npm and outputs the result to the 'build' folder. Replace with the commands required to build your project, or remove this step entirely if your site is pre-built.
-        run: |
-          npm install
-          npm run build
-      - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@4.1.1
-        with:
-          branch: gh-pages # The branch the action should deploy to.
-          folder: dist # The folder the action should deploy.
-
   build-ssh-liunx:
     runs-on: ubuntu-latest #指定运行环境为最新的Ubuntu版本
     strategy:
@@ -55,10 +39,11 @@ jobs:
             cd /srv/plug-r-qw
             rm -rf *
           scp: | #将build生成的文件从GitHub服务器的相应目录，传到我服务器的相应目录
-            ./dist => /srv/plug-r-qw
-            ./node-serve => /srv/plug-r-qw
+            mkdir public
+            ./dist/* => /srv/plug-r-qw/public
+            ./node-serve/* => /srv/plug-r-qw
           last_ssh: | #这部分是在服务器上，传输文件后执行的命令，新版本重新安装依赖并运行
-            cd /srv/plug-r-qw/node-serve
+            cd /srv/plug-r-qw
             npm install 
-            pm2 start ./index.js --name='plug-r-qw'
+            pm2 reload ./index.js --name='plug-r-qw'
             
