@@ -33,7 +33,9 @@ jobs:
           pass: ${{ secrets.LDD_SERVER_PASSWORD }} # 服务器的密码
           connect_timeout: 10s
           last_ssh: | #这部分是在服务器上，传输文件后执行的命令，停止并删除docker，然后重新启动
+            cd /usr/local/docker-compose/plug-r-qw;
             # 停止旧版plug容器;
+            echo "删除旧版容器";
             docker stop plug-r-qw;
             # 删除旧版plug容器;
             docker rm -f plug-r-qw;
@@ -44,6 +46,6 @@ jobs:
             # 删除旧版nginx容器;
             docker rm -f nginx;
             # 启动;
-            cd /usr/local/docker-compose/plug-r-qw;
-            docker-compose up -d;
+            echo "启动docker-compose";
+            docker-compose up -d
             
