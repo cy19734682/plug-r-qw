@@ -10,6 +10,8 @@ on:
   push:
     branches:
       - master
+    tags:
+      - v1.**
     paths:
       - '.github/workflows/main.yml' #当前文件变化时构建
       - 'node-serve/**' #node-serve目录下有变化时构建
@@ -49,9 +51,9 @@ jobs:
           last_ssh: | #这部分是在服务器上，传输文件后执行的命令，新版本重新安装依赖并运行(结尾要加分号，不然会被默认用&&拼接)
             cd /srv/plug-r-qw;
             npm install;
-            echo "判断名为plug-r-qw的进程是否存在"
+            echo "判断名为plug-r-qw的进程是否存在";
             if test -z $(pm2 pid plug-r-qw);  
-            then
+            then;
               echo "不存在" ; 
               pm2 start ./index.js --name='plug-r-qw'; 
             else echo "存在" ;  
