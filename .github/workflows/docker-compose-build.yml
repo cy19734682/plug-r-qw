@@ -34,7 +34,6 @@ jobs:
           connect_timeout: 10s
           last_ssh: | #这部分是在服务器上，传输文件后执行的命令，停止并删除docker，然后重新启动
             cd /usr/local/docker-compose/plug-r-qw;
-            docker login --username=${{ secrets.DOCKERHUB_ALIYUN_USERNAME }} --password ${{ secrets.DOCKERHUB_ALIYUN_PASSWORD }} registry.cn-hangzhou.aliyuncs.com;
             # 停止旧版plug容器;
             docker stop plug-r-qw;
             # 删除旧版plug容器;
