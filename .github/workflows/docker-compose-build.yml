@@ -33,9 +33,14 @@ jobs:
           pass: ${{ secrets.LDD_SERVER_PASSWORD }} # 服务器的密码
           connect_timeout: 10s
           first_ssh: | #这部分是在服务器上，传输文件前执行的命令，关闭并删除运行中的旧版本
+            cd /srv/plug-r-qw
           scp: | #将build生成的文件从GitHub服务器的相应目录，传到我服务器的相应目录
           last_ssh: | #这部分是在服务器上，传输文件后执行的命令，停止并删除docker，然后重新启动
             cd /usr/local/docker-compose/plug-r-qw;
-            echo "启动docker-compose";
+            docker stop plug-r-qw;
+            docker rm -f plug-r-qw;
+            docker rmi -f registry.cn-hangzhou.aliyuncs.com/chenyue/plug-r-qw:service;
+            docker stop nginx;
+            docker rm -f nginx;
             docker-compose up -d
             
