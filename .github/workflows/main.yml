@@ -10,8 +10,6 @@ on:
   push:
     branches:
       - master
-    tags:
-      - v1.**
     paths:
       - '.github/workflows/main.yml' #当前文件变化时构建
       - 'node-serve/**' #node-serve目录下有变化时构建
@@ -53,7 +51,7 @@ jobs:
             npm install;
             echo "判断名为plug-r-qw的进程是否存在";
             if test -z $(pm2 pid plug-r-qw);  
-            then;
+            then
               echo "不存在" ; 
               pm2 start ./index.js --name='plug-r-qw'; 
             else echo "存在" ;  
