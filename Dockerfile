@@ -24,6 +24,6 @@ RUN npm install
 
 COPY --from=frontend /app/dist /app/public
 
-EXPOSE 7890
+EXPOSE 3006
 
 CMD ["npm", "run", "serve"]

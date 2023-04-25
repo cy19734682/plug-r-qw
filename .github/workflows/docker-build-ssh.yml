@@ -1,0 +1,53 @@
+
+# .github/workflows/buildAndDeploy.yml
+
+# 自动发布
+# https://github.com/marketplace/actions/deploy-to-github-pages
+
+name: Docker Build and SSH
+
+on: # workflow的事件钩子，告知程序说明时候出发自动部署
+  push:
+    branches: [ master ] # 在master分支有push操作的时候自动部署
+    paths:
+      - '.github/workflows/docker-build-ssh.yml' #当前文件变化时构建
+      - 'node-serve/**' #node-serve目录下有变化时构建
+      - 'src/**' #src目录下有变化时构建
+jobs:
+  build: # 打包并上传docker镜像
+    runs-on: ubuntu-latest # 依赖的环境
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build Image
+        # ${{ secrets.DOCKER_REPOSITORY }}是读取之前在Secret创建的名为DOCKER_REPOSITORY的值
+        run: docker build -t registry.cn-hangzhou.aliyuncs.com/chenyue/plug-r-qw:latest . # 打包并docker镜像，版本为latest
+      - name: Login to Registry # 登录阿里云镜像服务器
+        run: docker login --username=${{ secrets.DOCKERHUB_ALIYUN_USERNAME }} --password ${{ secrets.DOCKERHUB_ALIYUN_PASSWORD }} registry.cn-hangzhou.aliyuncs.com
+      - name: Push Image # 推送镜像，设置版本为latest
+        run: docker push registry.cn-hangzhou.aliyuncs.com/chenyue/plug-r-qw:latest
+  pull-docker: # docker部署
+    needs: [build]
+    name: Pull Docker
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.LDD_SERVER_IP }} # 服务器ip
+          username: ${{ secrets.LDD_SERVER_NAME }} # 服务器登录用户名
+          password: ${{ secrets.LDD_SERVER_PASSWORD }} # 服务器登录密码
+          port: 22 # 服务器ssh端口
+          script: |
+             # 停止旧版容器
+             docker stop plug-r-qw
+             # 删除旧版容器
+             docker rm -f plug-r-qw
+             # 删除旧版镜像
+             docker rmi -f registry.cn-hangzhou.aliyuncs.com/chenyue/plug-r-qw
+             # 登录阿里云镜像服务器
+             docker login --username=${{ secrets.DOCKERHUB_ALIYUN_USERNAME }} --password ${{ secrets.DOCKERHUB_ALIYUN_PASSWORD }} registry.cn-hangzhou.aliyuncs.com
+             # 拉取最新latest版本镜像
+             docker pull registry.cn-hangzhou.aliyuncs.com/chenyue/plug-r-qw:latest
+             # 运行最新latest版本镜像
+             docker run -d -p 8066:3006 registry.cn-hangzhou.aliyuncs.com/chenyue/plug-r-qw:latest --name plug-r-qw
+

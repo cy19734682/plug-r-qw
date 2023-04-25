@@ -10,6 +10,10 @@ on:
   push:
     branches:
       - master
+    paths:
+      - '.github/workflows/main.yml' #当前文件变化时构建
+      - 'node-serve/**' #node-serve目录下有变化时构建
+      - 'src/**' #src目录下有变化时构建
 
 jobs:
   build-ssh-liunx:
