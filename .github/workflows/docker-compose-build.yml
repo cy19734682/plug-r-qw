@@ -10,7 +10,7 @@ on: # workflow的事件钩子，告知程序说明时候出发自动部署
   push:
     branches: [ master ] # 在master分支有push操作的时候自动部署
     paths:
-      - '.github/workflows/docker-compose-build' #当前文件变化时构建
+      - '.github/workflows/docker-compose-build.yml' #当前文件变化时构建
       - 'node-serve/**' #node-serve目录下有变化时构建
       - 'src/**' #src目录下有变化时构建
 jobs:
