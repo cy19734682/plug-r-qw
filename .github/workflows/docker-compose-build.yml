@@ -15,7 +15,6 @@ on: # workflow的事件钩子，告知程序说明时候出发自动部署
       - 'src/**' #src目录下有变化时构建
 jobs:
   pull-docker: # 打包传输到服务器并docker部署
-    needs: [build]
     runs-on: ubuntu-latest
     strategy:
       matrix:
