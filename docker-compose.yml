@@ -3,7 +3,7 @@ version: '3'
 services:
   app:
     container_name: plug-r-qw
-    image: registry.cn-hangzhou.aliyuncs.com/chenyue:service # 总是使用latest,更新时重新pull该tag镜像即可
+    image: registry.cn-hangzhou.aliyuncs.com/chenyue/plug-r-qw:service # 总是使用latest,更新时重新pull该tag镜像即可
     ports:
       - 3006:3006
     # 容器运行网关
@@ -12,7 +12,7 @@ services:
         ipv4_address: 172.18.0.2
   nginx:
     container_name: nginx
-    image: registry.cn-hangzhou.aliyuncs.com/chenyue/nginx:1.21.1
+    image: nginx:latest
     ports:
       - '8060:80'
     expose:

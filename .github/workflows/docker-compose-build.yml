@@ -53,7 +53,7 @@ jobs:
             cd /usr/local/docker-compose/plug-r-qw
             rm -rf *
           scp: | #将build生成的文件从GitHub服务器的相应目录，传到我服务器的相应目录
-            ./dist/* => /usr/local/docker-compose/plug-r-qw
+            ./dist => /usr/local/docker-compose/plug-r-qw
             ./docker-compose.yml => /usr/local/docker-compose/plug-r-qw
             ./nginx.conf => /usr/local/docker-compose/plug-r-qw
           last_ssh: | #这部分是在服务器上，传输文件后执行的命令，停止并删除docker，然后重新启动
@@ -69,8 +69,6 @@ jobs:
             docker stop nginx
             # 删除旧版nginx容器
             docker rm -f nginx
-            # 删除旧版nginx镜像
-            docker rmi -f registry.cn-hangzhou.aliyuncs.com/chenyue/nginx:1.21.1
             # 启动
             docker-compose up -d  
             
