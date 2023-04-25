@@ -49,5 +49,5 @@ jobs:
              # 拉取最新latest版本镜像
              docker pull registry.cn-hangzhou.aliyuncs.com/chenyue/plug-r-qw:latest
              # 运行最新latest版本镜像
-             docker run -d -p 8066:3006 registry.cn-hangzhou.aliyuncs.com/chenyue/plug-r-qw:latest --name plug-r-qw
+             docker run -d -p 8066:3006 --name plug-r-qw registry.cn-hangzhou.aliyuncs.com/chenyue/plug-r-qw:latest
 
