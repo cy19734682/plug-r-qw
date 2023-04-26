@@ -1,0 +1,14 @@
+# 定时触发事件
+# cron 设置时间，可以设置多个时间
+name: Schedule
+
+on:
+  schedule:
+    - cron: '3 11 * * 0'
+
+jobs:
+  test_schedule:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo time
+        run: echo "This step will always run"
