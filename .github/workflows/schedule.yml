@@ -8,7 +8,7 @@ name: Schedule
 
 on:
   schedule:
-    - cron: '13 11 * * *'
+    - cron: '20 11 * * *'
 
 jobs:
   test_schedule:
