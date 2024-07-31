@@ -208,7 +208,7 @@ iview组件库
 	>           less: {
 	>             javascriptEnabled: true,
 	>             math: 'always',
-  >            rewriteUrls: 'off' //或者删除该行代码
+  >            rewriteUrls: 'off' //或者删除改行代码
 	>           }
 	>       }
 	>     }
