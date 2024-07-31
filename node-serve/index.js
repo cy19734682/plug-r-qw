@@ -11,7 +11,7 @@ const uploadRouter = require('./upload')
 
 const app = express()
 
-const PORT = 7890
+const PORT = 3006
 
 app.listen(PORT, () => {
   console.log('Express server running at http://127.0.0.1:' + PORT)

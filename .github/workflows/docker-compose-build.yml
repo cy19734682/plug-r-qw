@@ -1,0 +1,68 @@
+
+# .github/workflows/buildAndDeploy.yml
+
+# 自动发布
+# https://github.com/marketplace/actions/deploy-to-github-pages
+
+name: Docker Compose Build
+
+on: # workflow的事件钩子，告知程序说明时候出发自动部署
+  push:
+    branches: [ master ] # 在master分支有push操作的时候自动部署
+    paths:
+      - '.github/workflows/docker-compose-build.yml' #当前文件变化时构建
+      - 'node-serve/**' #node-serve目录下有变化时构建
+      - 'src/**' #src目录下有变化时构建
+jobs:
+  build: # 打包并上传docker镜像（只打包后端服务，前端由nginx加载）
+    runs-on: ubuntu-latest # 依赖的环境
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build Image
+        # ${{ secrets.DOCKER_REPOSITORY }}是读取之前在Secret创建的名为DOCKER_REPOSITORY的值
+        run: docker build -t registry.cn-hangzhou.aliyuncs.com/chenyue/plug-r-qw:service . # 打包并docker镜像，版本为service
+      - name: Login to Registry # 登录阿里云镜像服务器
+        run: docker login --username=${{ secrets.DOCKERHUB_ALIYUN_USERNAME }} --password ${{ secrets.DOCKERHUB_ALIYUN_PASSWORD }} registry.cn-hangzhou.aliyuncs.com
+      - name: Push Image # 推送镜像，设置版本为latest
+        run: docker push registry.cn-hangzhou.aliyuncs.com/chenyue/plug-r-qw:service
+  pull-docker: # 打包传输到服务器并docker部署
+    needs: [build]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [ 14.21.2 ] #指定node版本
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }} #使用action安装node环境
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm install #安装项目依赖
+      - run: npm run build #build项目
+      - name: ssh scp ssh pipelines #使用市场找到的action来将项目build的产物传到我的服务器
+        uses: cross-the-world/ssh-scp-ssh-pipelines@latest
+        env:
+          WELCOME: "ssh scp ssh pipelines"
+          LASTSSH: "Doing something after copying"
+        with:
+          host: ${{ secrets.LDD_SERVER_IP }} # 服务器的ip
+          user: ${{ secrets.LDD_SERVER_NAME }} # 服务器的账号
+          pass: ${{ secrets.LDD_SERVER_PASSWORD }} # 服务器的密码
+          connect_timeout: 10s
+          first_ssh: | #这部分是在服务器上，传输文件前执行的命令（命令里面不要写注释）
+            cd /usr/local/docker-compose/plug-r-qw
+            rm -rf *
+          scp: | #将build生成的文件从GitHub服务器的相应目录，传到我服务器的相应目录（命令里面不要写注释）
+            ./dist => /usr/local/docker-compose/plug-r-qw
+            ./docker-compose.yml => /usr/local/docker-compose/plug-r-qw
+            ./nginx.conf => /usr/local/docker-compose/plug-r-qw
+          last_ssh: | #这部分是在服务器上，传输文件后执行的命令，停止并删除docker，然后重新启动(命令里面不要写注释)
+            cd /usr/local/docker-compose/plug-r-qw
+            docker login --username=${{ secrets.DOCKERHUB_ALIYUN_USERNAME }} --password ${{ secrets.DOCKERHUB_ALIYUN_PASSWORD }} registry.cn-hangzhou.aliyuncs.com;
+            docker stop plug-r-qw;
+            docker rm -f plug-r-qw;
+            docker rmi -f registry.cn-hangzhou.aliyuncs.com/chenyue/plug-r-qw:service;
+            docker stop nginx;
+            docker rm -f nginx;
+            docker-compose up -d
+            
