@@ -38,12 +38,9 @@ module.exports = defineConfig({
 
 	configureWebpack: (config) => {
 		if (process.env.NODE_ENV === 'production') {
-			return {
-				resolve: { alias: { '@': './example' } },
-				output: {
-					libraryExport: 'default'
-				},
-				externals: [
+			let externals = []
+			if (process.env.BUILD_ENV === 'lib') {
+				externals = [
 					'@jiaminghi/data-view',
 					'@wangeditor/editor',
 					'@wangeditor/editor-for-vue',
@@ -69,7 +66,14 @@ module.exports = defineConfig({
 					'xss',
 					'china-map-data',
 					'deepmerge'
-				],
+				]
+			}
+			return {
+				resolve: { alias: { '@': './example' } },
+				output: {
+					libraryExport: 'default'
+				},
+				externals,
 				plugins: [
 					new compressionPlugin({
 						test: /\.js$|\.html$|\.css/, //匹配文件名
