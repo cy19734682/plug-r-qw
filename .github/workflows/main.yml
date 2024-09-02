@@ -20,9 +20,9 @@ jobs:
     runs-on: ubuntu-latest #指定运行环境为最新的Ubuntu版本
     strategy:
       matrix:
-        node-version: [ 14.21.2 ] #指定node版本
+        node-version: [ 20.3.1 ] #指定node版本
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }} #使用action安装node环境
         uses: actions/setup-node@v1
         with:
