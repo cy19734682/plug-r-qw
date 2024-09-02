@@ -6,13 +6,14 @@
 
 name: Docker Compose Build
 
-on: # workflow的事件钩子，告知程序说明时候出发自动部署
-  push:
-    branches: [ master ] # 在master分支有push操作的时候自动部署
-    paths:
-      - '.github/workflows/docker-compose-build.yml' #当前文件变化时构建
-      - 'node-serve/**' #node-serve目录下有变化时构建
-      - 'src/**' #src目录下有变化时构建
+# workflow的事件钩子，告知程序说明时候出发自动部署
+on: workflow_dispatch # 暂时改为手动触发（需要自动触发时将下方注释放开）
+#  push:
+#    branches: [ master ] # 在master分支有push操作的时候自动部署
+#    paths:
+#      - '.github/workflows/docker-compose-build.yml' #当前文件变化时构建
+#      - 'node-serve/**' #node-serve目录下有变化时构建
+#      - 'src/**' #src目录下有变化时构建
 jobs:
   build: # 打包并上传docker镜像（只打包后端服务，前端由nginx加载）
     runs-on: ubuntu-latest # 依赖的环境
