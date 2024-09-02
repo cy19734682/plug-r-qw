@@ -1,0 +1,1 @@
+"use strict";(self["webpackChunk_zhangqingcq_plug_r_qw"]=self["webpackChunk_zhangqingcq_plug_r_qw"]||[]).push([[740],{4740:function(n,u,e){e.r(u),e.d(u,{default:function(){return a}});var r=function(){var n=this,u=n._self._c;return u("router-view")},t=[],l={name:"routerViewComponent"},_=l,c=e(1656),i=(0,c.A)(_,r,t,!1,null,null,null),a=i.exports}}]);
