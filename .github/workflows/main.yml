@@ -4,48 +4,55 @@
 # 自动发布
 # https://github.com/marketplace/actions/deploy-to-github-pages
 
-name: Build and Deploy
+name: Build and SSH to Linux
 
-on:
-  push:
-    branches:
-      - master
-    paths:
-      - '.github/workflows/main.yml' #当前文件变化时构建
-      - 'src/**' #src目录下有变化时构建
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: pages
-  cancel-in-progress: false
+on: workflow_dispatch # 暂时改为手动触发（需要自动触发时将下方注释放开）
+#  push:
+#    branches:
+#      - master
+#    paths:
+#      - '.github/workflows/main.yml' #当前文件变化时构建
+#      - 'node-serve/**' #node-serve目录下有变化时构建
+#      - 'src/**' #src目录下有变化时构建
 
 jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
+  build-ssh-liunx:
+    runs-on: ubuntu-latest #指定运行环境为最新的Ubuntu版本
+    strategy:
+      matrix:
+        node-version: [ 20.3.1 ] #指定node版本
     steps:
-      - name: Checkout 🛎️
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }} #使用action安装node环境
+        uses: actions/setup-node@v1
         with:
-          # “最近更新时间” 等 git 日志相关信息，需要拉取全部提交记录
-          fetch-depth: 0
-      - name: Set up Node.js Version
-        uses: actions/setup-node@v4  # 设置Node.js版本为20
+          node-version: ${{ matrix.node-version }}
+      - run: npm install #安装项目依赖
+      - run: npm run build #build项目
+      - name: ssh scp ssh pipelines #使用市场找到的action来将项目build的产物传到我的服务器
+        uses: cross-the-world/ssh-scp-ssh-pipelines@latest
+        env:
+          WELCOME: "ssh scp ssh pipelines"
+          LASTSSH: "Doing something after copying"
         with:
-          node-version: 20  # 指定Node.js版本号
-      - name: Install and Build 🔧 # This example project is built using npm and outputs the result to the 'build' folder. Replace with the commands required to build your project, or remove this step entirely if your site is pre-built.
-        run: |
-          npm install
-          npm run build
-      - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          # GitHub 密钥
-          token:
-            ${{ secrets.ACCESS_TOKEN }}
-          # GitHub Pages 读取的分支
-          branch: gh-pages
-          folder: dist
+          host: ${{ secrets.LDD_SERVER_IP }} # 服务器的ip
+          user: ${{ secrets.LDD_SERVER_NAME }} # 服务器的账号
+          pass: ${{ secrets.LDD_SERVER_PASSWORD }} # 服务器的密码
+          connect_timeout: 10s
+          first_ssh: | #这部分是在服务器上，传输文件前执行的命令，关闭并删除运行中的旧版本
+            cd /srv/plug-r-qw
+            rm -rf *
+          scp: | #将build生成的文件从GitHub服务器的相应目录，传到我服务器的相应目录
+            mkdir public
+            ./dist/* => /srv/plug-r-qw/public
+            ./node-serve/* => /srv/plug-r-qw
+          last_ssh: | #这部分是在服务器上，传输文件后执行的命令，新版本重新安装依赖并运行(结尾要加分号，不然会被默认用&&拼接)
+            cd /srv/plug-r-qw;
+            npm install;
+            echo "判断名为plug-r-qw的进程是否存在";
+            if test -z $(pm2 pid plug-r-qw);  
+            then echo "不存在" ; 
+              pm2 start ./index.js --name='plug-r-qw'; 
+            else echo "存在" ;  
+              pm2 restart plug-r-qw;  
+            fi

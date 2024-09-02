@@ -1,0 +1,51 @@
+
+# .github/workflows/buildAndDeploy.yml
+
+# 自动发布
+# https://github.com/marketplace/actions/deploy-to-github-pages
+
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - '.github/workflows/main.yml' #当前文件变化时构建
+      - 'src/**' #src目录下有变化时构建
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+        with:
+          # “最近更新时间” 等 git 日志相关信息，需要拉取全部提交记录
+          fetch-depth: 0
+      - name: Set up Node.js Version
+        uses: actions/setup-node@v4  # 设置Node.js版本为20
+        with:
+          node-version: 20  # 指定Node.js版本号
+      - name: Install and Build 🔧 # This example project is built using npm and outputs the result to the 'build' folder. Replace with the commands required to build your project, or remove this step entirely if your site is pre-built.
+        run: |
+          npm install
+          npm run build
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          # GitHub 密钥
+          token:
+            ${{ secrets.ACCESS_TOKEN }}
+          # GitHub Pages 读取的分支
+          branch: gh-pages
+          folder: dist
